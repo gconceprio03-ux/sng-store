@@ -129,24 +129,36 @@
   }
 
   /* ---------------- reveal on scroll ---------------- */
+  var revealIO = null, revealReady = false;
   function initReveal() {
-    var els = $$(".reveal");
-    if (reduced || !("IntersectionObserver" in window)) {
-      els.forEach(function (el) { el.classList.add("is-visible"); });
-      return;
-    }
-    var io = new IntersectionObserver(function (entries) {
+    revealReady = true;
+    if (reduced || !("IntersectionObserver" in window)) { revealScan(); return; }
+    revealIO = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
         if (en.isIntersecting) {
           en.target.classList.add("is-visible");
           var bar = en.target.querySelector(".acard-bar i");
           if (bar && bar.dataset.w) bar.style.width = bar.dataset.w;
           if (en.target.classList.contains("lnode")) en.target.classList.add("lit");
-          io.unobserve(en.target);
+          revealIO.unobserve(en.target);
         }
       });
-    }, { threshold: 0.15, rootMargin: "0px 0px -8% 0px" });
-    els.forEach(function (el) { io.observe(el); });
+    }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+    revealScan();
+  }
+  // Observe any not-yet-revealed .reveal element. MUST be called after injecting
+  // dynamic content (cards/nodes built after init), or those stay at opacity:0.
+  function revealScan() {
+    if (!revealReady) return;
+    var els = $$(".reveal:not(.is-visible)");
+    if (!revealIO) {
+      els.forEach(function (el) {
+        el.classList.add("is-visible");
+        var b = el.querySelector(".acard-bar i"); if (b && b.dataset.w) b.style.width = b.dataset.w;
+      });
+      return;
+    }
+    els.forEach(function (el) { revealIO.observe(el); });
   }
 
   function observeOnce(el, cb) {
@@ -330,6 +342,7 @@
       el.innerHTML = '<div class="why-icon">' + (ICONS[f.icon] || "") + '</div><h3>' + f.title + '</h3><p>' + f.text + '</p>';
       grid.appendChild(el);
     });
+    revealScan();
   }
 
   /* ---------------- account grid ---------------- */
@@ -380,6 +393,7 @@
   function buildAccounts() {
     var grid = $("#vault-grid"); if (!grid) return;
     D.ACCOUNTS.forEach(function (acc) { grid.appendChild(accountCard(acc)); });
+    revealScan(); // cards are built after initReveal — register them now
     // filters
     $$(".filter").forEach(function (f) {
       f.addEventListener("click", function () {
@@ -527,6 +541,7 @@
       });
       track.appendChild(node);
     });
+    revealScan();
   }
 
   /* ---------------- FAQ ---------------- */
