@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <radialGradient id="orb" cx="50%" cy="46%" r="55%">
+      <stop offset="0" stop-color="#00e5ff" stop-opacity=".5"/>
+      <stop offset=".5" stop-color="#b026ff" stop-opacity=".4"/>
+      <stop offset="1" stop-color="#070510" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="wm" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#b9a9e0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#070510"/>
+  <ellipse cx="600" cy="300" rx="520" ry="360" fill="url(#orb)"/>
+  <g font-family="'Chakra Petch','Arial Narrow',sans-serif" text-anchor="middle">
+    <text x="603" y="318" font-size="240" font-weight="700" fill="#00e5ff" opacity=".5">SNG</text>
+    <text x="597" y="318" font-size="240" font-weight="700" fill="#b026ff" opacity=".5">SNG</text>
+    <text x="600" y="318" font-size="240" font-weight="700" fill="url(#wm)">SNG</text>
+    <text x="600" y="400" font-size="40" font-weight="600" letter-spacing="6" fill="#f2eaff">RANK IS A SYSTEM. WE BREACH IT.</text>
+    <text x="600" y="460" font-size="24" letter-spacing="3" fill="#00e5ff" font-family="monospace">R6 RANKED ACCOUNTS // STEALTH BOOSTING</text>
+  </g>
+  <rect x="40" y="40" width="1120" height="550" fill="none" stroke="#b026ff" stroke-opacity=".35" stroke-width="2"/>
+  <circle cx="80" cy="80" r="6" fill="#b6ff3c"/>
+  <text x="100" y="86" font-family="monospace" font-size="20" fill="#b6ff3c">ONLINE</text>
+</svg>

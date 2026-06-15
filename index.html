@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SNG // Ranked R6 Accounts &amp; Boosting — Rank Is a System. We Breach It.</title>
+  <meta name="description" content="SNG — premium Rainbow Six Siege ranked accounts and stealth rank boosting. Instant delivery, lifetime warranty, 100% anonymous. Breach the ladder." />
+  <meta name="theme-color" content="#070510" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="SNG // Ranked R6 Accounts &amp; Boosting" />
+  <meta property="og:description" content="Rank is a system. We breach it. Instant accounts, stealth boosting, total anonymity." />
+  <meta property="og:image" content="assets/og.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+
+  <!-- Fonts: Chakra Petch (display) · Sora (body) · JetBrains Mono (HUD/terminal) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ░░ custom cursor ░░ -->
+  <div id="reticle" aria-hidden="true"><span class="reticle-ring"></span><span class="reticle-dot"></span></div>
+  <div id="trailer" aria-hidden="true"></div>
+
+  <!-- ░░ ambient overlays ░░ -->
+  <div class="fx-vignette" aria-hidden="true"></div>
+
+  <!-- ░░ WebGL shader background (flowing neon plasma) ░░ -->
+  <canvas class="shaderbg" id="shaderbg" aria-hidden="true"></canvas>
+
+  <!-- ░░ drifting rank shards (site-wide background motion) ░░ -->
+  <div class="shards" id="shards" aria-hidden="true"></div>
+
+  <!-- ░░ rotating DNA spine (scroll-driven backbone) ░░ -->
+  <canvas class="spine" id="spine" aria-hidden="true"></canvas>
+
+
+  <!-- ░░ cinematic preloader ░░ -->
+  <div id="boot">
+    <div class="boot-grid" aria-hidden="true"></div>
+    <div class="boot-scan" aria-hidden="true"></div>
+    <div class="boot-inner">
+      <div class="boot-emblem" id="boot-emblem" aria-hidden="true"></div>
+      <div class="boot-title mono">SNG // SYSTEM BOOT</div>
+      <div class="boot-pct" id="boot-pct">00</div>
+      <div class="boot-bar"><span class="boot-bar-fill" id="boot-bar"></span></div>
+      <pre id="boot-log" class="boot-log" aria-hidden="true"></pre>
+      <button class="boot-skip mono" id="boot-skip">[ skip intro ▸ ]</button>
+    </div>
+    <div class="boot-wipe" id="boot-wipe" aria-hidden="true"></div>
+  </div>
+
+  <!-- ░░ persistent rank reactor (docks bottom-right on scroll) ░░ -->
+  <div id="reactor" class="reactor" aria-hidden="true"><span class="reactor-core"></span></div>
+
+  <!-- ═══════════════ HUD UPLINK BAR ═══════════════ -->
+  <header class="hud" id="hud">
+    <div class="hud-left">
+      <a href="#top" class="hud-brand" data-cursor="lock" aria-label="SNG home">
+        <span class="hud-sigil" id="hud-sigil"></span>
+        <span class="hud-brand-tx">SNG</span>
+      </a>
+      <span class="hud-uplink"><i class="dot-live"></i> SNG://UPLINK&nbsp;SECURE<span class="caret">_</span></span>
+    </div>
+
+    <nav class="hud-nav" aria-label="Primary">
+      <a href="#vault" data-cursor="lock">Accounts</a>
+      <a href="#calc" data-cursor="lock">Boosting</a>
+      <a href="#ladder" data-cursor="lock">Ranks</a>
+      <a href="#faq" data-cursor="lock">FAQ</a>
+    </nav>
+
+    <div class="hud-right">
+      <button class="hud-sound" id="sound-toggle" data-cursor="lock" aria-label="Toggle sound" aria-pressed="false" title="Sound FX">
+        <span class="hud-sound-ic" aria-hidden="true">♪</span>
+      </button>
+      <button class="hud-cart" id="open-cart" data-cursor="lock" aria-label="Open cart">
+        <span class="hud-cart-ic">▣</span>
+        <span class="hud-cart-tx">MANIFEST</span>
+        <span class="hud-cart-count" id="cart-count">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- live ops ticker -->
+  <div class="ops-ticker" aria-hidden="true">
+    <div class="ops-ticker-track" id="ops-ticker"></div>
+  </div>
+
+  <main id="top">
+
+    <!-- ═══════════════ HERO ═══════════════ -->
+    <section class="hero" id="hero">
+      <div class="hero-orb" id="hero-orb" aria-hidden="true"></div>
+      <div class="hero-halo" aria-hidden="true"></div>
+
+      <div class="hero-corner hero-corner--tl">
+        <span class="mono">STOCK</span>
+        <span class="hero-corner-v" data-count="312">312</span>
+        <span class="mono dim">accounts live</span>
+      </div>
+      <div class="hero-corner hero-corner--tr">
+        <i class="dot-live"></i><span class="mono">ONLINE</span>
+      </div>
+
+      <div class="hero-inner">
+        <p class="hero-kicker mono"><span class="br">[</span> R6 · RANKED ACCOUNTS &amp; BOOSTING <span class="br">]</span></p>
+
+        <h1 class="wordmark" data-text="SNG"><span>SNG</span></h1>
+
+        <h2 class="hero-head">
+          RANK IS A SYSTEM.<br />
+          WE <span class="glitch" data-text="BREACH">BREACH</span> IT.
+        </h2>
+
+        <p class="hero-cmd mono">&gt; sng --target=champion --eta=72h --mode=stealth</p>
+
+        <div class="hero-cta">
+          <a href="#vault" class="btn btn--cyan magnetic" data-cursor="lock">[ BROWSE ACCOUNTS ]</a>
+          <a href="#calc" class="btn btn--ghost magnetic" data-cursor="lock">[ RUN BOOST CALC ]</a>
+        </div>
+      </div>
+
+      <!-- counter-scrolling marquees -->
+      <div class="hero-marquees" aria-hidden="true">
+        <div class="marquee marquee--cyan"><div class="marquee-track" data-marquee="RANKED ACCOUNTS · INSTANT DELIVERY · STEALTH BOOSTING · 24/7 SUPPORT · LIFETIME WARRANTY · "></div></div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ TRUST STRIP ═══════════════ -->
+    <section class="trust" aria-label="Trust signals">
+      <div class="trust-stats" id="trust-stats"></div>
+      <div class="trust-pays mono">
+        <span>PAY:</span>
+        <span class="pay-chip">CARD</span>
+        <span class="pay-chip">TWINT</span>
+        <span class="pay-chip">PAYPAL</span>
+        <span class="pay-chip">CRYPTO</span>
+        <span class="pay-sec"><i class="dot-live"></i> SSL // ESCROW-SAFE</span>
+      </div>
+    </section>
+
+    <!-- ═══════════════ THE VAULT (accounts) ═══════════════ -->
+    <section class="vault" id="vault">
+      <div class="sec-head reveal">
+        <p class="eyebrow mono">// 01 — INVENTORY</p>
+        <h2 class="sec-title">THE VAULT</h2>
+        <p class="sec-sub">Hand-leveled ranked accounts. Full email access, original owner, zero bans. Pick your tier and breach in.</p>
+      </div>
+
+      <div class="vault-filters mono reveal" id="vault-filters" role="group" aria-label="Filter accounts">
+        <button class="filter is-on" data-filter="all" data-cursor="lock">ALL</button>
+        <button class="filter" data-filter="platinum" data-cursor="lock">PLATINUM</button>
+        <button class="filter" data-filter="emerald" data-cursor="lock">EMERALD</button>
+        <button class="filter" data-filter="diamond" data-cursor="lock">DIAMOND</button>
+        <button class="filter" data-filter="champion" data-cursor="lock">CHAMPION</button>
+      </div>
+
+      <div class="vault-grid" id="vault-grid"><!-- cards injected by main.js --></div>
+    </section>
+
+    <!-- ═══════════════ FEATURED HIGH-ROLLER ═══════════════ -->
+    <section class="featured" id="featured" aria-label="Featured account">
+      <div class="featured-card reveal" id="featured-card" data-cursor="lock"><!-- injected --></div>
+    </section>
+
+    <!-- ═══════════════ WHY SNG (guarantees) ═══════════════ -->
+    <section class="why" id="why">
+      <div class="sec-head reveal">
+        <p class="eyebrow mono">// WHY SNG</p>
+        <h2 class="sec-title">BUILT TO BE TRUSTED</h2>
+        <p class="sec-sub">Every order is backed end to end. No noise, no risk games — just clean delivery and people who answer.</p>
+      </div>
+      <div class="why-grid" id="why-grid"><!-- pillars injected by main.js --></div>
+    </section>
+
+    <!-- ═══════════════ BOOST CALCULATOR ═══════════════ -->
+    <section class="calc" id="calc">
+      <div class="sec-head reveal">
+        <p class="eyebrow mono">// 02 — RUN THE OP</p>
+        <h2 class="sec-title">BOOST CALCULATOR</h2>
+        <p class="sec-sub">Drag from where you are to where you want to be. Live quote, live ETA, straight to your manifest.</p>
+      </div>
+
+      <div class="calc-console reveal">
+        <div class="calc-readout">
+          <div class="calc-emblem-wrap">
+            <div class="calc-emblem" id="calc-emblem-from"></div>
+            <span class="calc-arrow mono">»»»</span>
+            <div class="calc-emblem" id="calc-emblem-to"></div>
+          </div>
+          <div class="calc-labels mono">
+            <span id="calc-label-from">SILVER III</span>
+            <span class="dim">CURRENT&nbsp;→&nbsp;TARGET</span>
+            <span id="calc-label-to">DIAMOND IV</span>
+          </div>
+        </div>
+
+        <div class="calc-sliders">
+          <label class="mono slabel">CURRENT RANK</label>
+          <input type="range" id="slider-from" min="0" max="0" value="0" class="slider slider--from" data-cursor="lock" aria-label="Current rank" />
+          <label class="mono slabel">TARGET RANK</label>
+          <input type="range" id="slider-to" min="0" max="0" value="0" class="slider slider--to" data-cursor="lock" aria-label="Target rank" />
+        </div>
+
+        <div class="calc-options mono" id="calc-options" role="group" aria-label="Boost options"><!-- toggles injected --></div>
+
+        <div class="calc-quote">
+          <div class="calc-quote-row">
+            <span class="mono dim">EST. DELIVERY</span>
+            <span class="mono" id="calc-eta">~5 days</span>
+          </div>
+          <div class="calc-quote-row">
+            <span class="mono dim">DIVISIONS</span>
+            <span class="mono" id="calc-div">12</span>
+          </div>
+          <div class="calc-price">
+            <span class="mono dim">TOTAL</span>
+            <span class="odo" id="calc-price">€0</span>
+          </div>
+          <button class="btn btn--cyan btn--block magnetic" id="deploy-boost" data-cursor="lock">[ DEPLOY BOOST ▸ ]</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ RANK LADDER ═══════════════ -->
+    <section class="ladder" id="ladder">
+      <div class="sec-head reveal">
+        <p class="eyebrow mono">// 03 — THE CLIMB</p>
+        <h2 class="sec-title">RANK LADDER</h2>
+        <p class="sec-sub">Copper to Champion. Tap any tier to load it into the calculator.</p>
+      </div>
+      <div class="ladder-track" id="ladder-track"><!-- nodes injected --></div>
+    </section>
+
+    <!-- ═══════════════ VOUCHES ═══════════════ -->
+    <section class="vouches" id="vouches">
+      <div class="sec-head reveal">
+        <p class="eyebrow mono">// 04 — INTERCEPTED COMMS</p>
+        <h2 class="sec-title">VOUCHES</h2>
+        <p class="sec-sub">2,300+ verified deliveries. Receipts don't lie.</p>
+      </div>
+
+      <div class="vouch-grid">
+        <article class="vouch reveal">
+          <header class="vouch-head mono"><span class="vouch-handle">@kr1sp_</span><span class="vouch-stamp dim">02:14 · verified</span></header>
+          <p class="vouch-body">went silver → diamond in 4 days, booster never spoke in chat, fully stealth. insane. <span class="tag-ok">[VERIFIED]</span></p>
+          <footer class="vouch-foot mono">★★★★★ · Diamond boost</footer>
+        </article>
+        <article class="vouch reveal">
+          <header class="vouch-head mono"><span class="vouch-handle">@m1lo.exe</span><span class="vouch-stamp dim">19:48 · verified</span></header>
+          <p class="vouch-body">bought a champ account, email + everything came in like 6 minutes. legit shocked. <span class="tag-ok">[VERIFIED]</span></p>
+          <footer class="vouch-foot mono">★★★★★ · Champion account</footer>
+        </article>
+        <article class="vouch reveal">
+          <header class="vouch-head mono"><span class="vouch-handle">@fern_ow</span><span class="vouch-stamp dim">11:03 · verified</span></header>
+          <p class="vouch-body">support replied at 3am. who does that. fixed my login in 2 min. <span class="tag-ok">[VERIFIED]</span></p>
+          <footer class="vouch-foot mono">★★★★★ · Support</footer>
+        </article>
+        <article class="vouch reveal">
+          <header class="vouch-head mono"><span class="vouch-handle">@taz1k</span><span class="vouch-stamp dim">22:30 · verified</span></header>
+          <p class="vouch-body">duo boost was actually fun, dude was a smurf-god. plat → emerald no sweat. <span class="tag-ok">[VERIFIED]</span></p>
+          <footer class="vouch-foot mono">★★★★★ · Duo boost</footer>
+        </article>
+      </div>
+
+      <div class="deliveries mono" aria-hidden="true">
+        <div class="deliveries-track" id="deliveries-track"></div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ HOW IT WORKS ═══════════════ -->
+    <section class="how" id="how">
+      <div class="sec-head reveal">
+        <p class="eyebrow mono">// 05 — PROTOCOL</p>
+        <h2 class="sec-title">HOW IT WORKS</h2>
+      </div>
+      <div class="how-steps">
+        <article class="how-step reveal">
+          <span class="how-n mono">01</span>
+          <h3>Pick your op</h3>
+          <p>Grab a ranked account or build a boost in the calculator. Add it to your manifest.</p>
+        </article>
+        <article class="how-step reveal">
+          <span class="how-n mono">02</span>
+          <h3>Pay on-site</h3>
+          <p>Secure checkout — card, TWINT, PayPal or crypto. Encrypted end to end.</p>
+        </article>
+        <article class="how-step reveal">
+          <span class="how-n mono">03</span>
+          <h3>Get breached in</h3>
+          <p>Accounts land in your inbox in minutes. Boosts start same day, fully stealth.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ═══════════════ FAQ ═══════════════ -->
+    <section class="faq" id="faq">
+      <div class="sec-head reveal">
+        <p class="eyebrow mono">// 06 — QUERY</p>
+        <h2 class="sec-title">FAQ.EXE</h2>
+      </div>
+      <div class="faq-list" id="faq-list">
+        <div class="faq-item reveal">
+          <button class="faq-q mono" data-cursor="lock"><span class="faq-prompt">&gt;</span> is this ban-safe?<span class="faq-x">+</span></button>
+          <div class="faq-a"><p>Boosts run stealth: VPN-matched region, appear-offline, human players only — no cheats, ever. Account purchases come with full email access so they're yours to secure. Account sharing and boosting are against Ubisoft's ToS, so there's always inherent risk — we minimize it, we don't pretend it's zero.</p></div>
+        </div>
+        <div class="faq-item reveal">
+          <button class="faq-q mono" data-cursor="lock"><span class="faq-prompt">&gt;</span> how fast is delivery?<span class="faq-x">+</span></button>
+          <div class="faq-a"><p>Accounts: typically under 10 minutes after payment clears, dropped to your email. Boosts: started the same day, ~0.9 divisions/day on average, faster with Priority.</p></div>
+        </div>
+        <div class="faq-item reveal">
+          <button class="faq-q mono" data-cursor="lock"><span class="faq-prompt">&gt;</span> is it really anonymous?<span class="faq-x">+</span></button>
+          <div class="faq-a"><p>Yes. Boosters never speak in your chat, can appear offline to your friends list (VPN add-on), and we never link your order to your handle publicly.</p></div>
+        </div>
+        <div class="faq-item reveal">
+          <button class="faq-q mono" data-cursor="lock"><span class="faq-prompt">&gt;</span> region lock?<span class="faq-x">+</span></button>
+          <div class="faq-a"><p>Each account lists its region (EU / NA). Boosts are run on your account in your region. Need a specific region? Ask in support before ordering.</p></div>
+        </div>
+        <div class="faq-item reveal">
+          <button class="faq-q mono" data-cursor="lock"><span class="faq-prompt">&gt;</span> what about refunds &amp; warranty?<span class="faq-x">+</span></button>
+          <div class="faq-a"><p>Every account carries a replacement warranty — if access fails on arrival, we replace or refund. Boosts not delivered as quoted are refunded for the undelivered portion. No quibbling.</p></div>
+        </div>
+        <div class="faq-item reveal">
+          <button class="faq-q mono" data-cursor="lock"><span class="faq-prompt">&gt;</span> which payments work?<span class="faq-x">+</span></button>
+          <div class="faq-a"><p>Card, TWINT, PayPal and crypto. The checkout on this site is a live demo flow — wire your real payment provider before taking orders (see README).</p></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="footer-sigil" id="footer-sigil"></span>
+        <span class="wordmark wordmark--sm" data-text="SNG"><span>SNG</span></span>
+        <p class="footer-tag mono">CLIMB · FLEX · REPEAT</p>
+      </div>
+      <nav class="footer-tree mono" aria-label="Footer">
+        <span class="dim">~/sng</span>
+        <a href="#vault" data-cursor="lock">├─ accounts</a>
+        <a href="#calc" data-cursor="lock">├─ boosting</a>
+        <a href="#ladder" data-cursor="lock">├─ ranks</a>
+        <a href="#faq" data-cursor="lock">└─ faq</a>
+      </nav>
+      <div class="footer-social mono">
+        <a href="#" data-cursor="lock" aria-label="TikTok">&gt; tiktok</a>
+        <a href="#" data-cursor="lock" aria-label="Discord">&gt; discord</a>
+        <a href="#" data-cursor="lock" aria-label="Instagram">&gt; instagram</a>
+      </div>
+    </div>
+    <div class="footer-fine mono">
+      <p>© <span id="year">2026</span> SNG. All ops encrypted.<span class="caret">_</span></p>
+      <p class="dim">SNG is an independent service, not affiliated with or endorsed by Ubisoft. Rainbow Six Siege is a trademark of Ubisoft Entertainment.</p>
+    </div>
+    <div class="footer-marquee" aria-hidden="true"><div class="marquee-track" data-marquee="CLIMB · FLEX · REPEAT · "></div></div>
+  </footer>
+
+  <!-- ═══════════════ CART DRAWER ═══════════════ -->
+  <div class="drawer-backdrop" id="drawer-backdrop"></div>
+  <aside class="drawer" id="drawer" aria-label="Cart" aria-hidden="true">
+    <header class="drawer-head">
+      <h3 class="mono">OPS MANIFEST</h3>
+      <button class="drawer-close" id="close-cart" data-cursor="lock" aria-label="Close cart">×</button>
+    </header>
+    <div class="drawer-body" id="drawer-body"><!-- line items injected --></div>
+    <div class="drawer-empty mono" id="drawer-empty">
+      <p>&gt; manifest empty.</p>
+      <p class="dim">add an account or deploy a boost to begin.</p>
+    </div>
+    <footer class="drawer-foot" id="drawer-foot">
+      <div class="promo mono">
+        <input type="text" id="promo-input" placeholder="ENTER CHEAT CODE" aria-label="Promo code" />
+        <button id="promo-apply" data-cursor="lock">APPLY</button>
+      </div>
+      <div class="promo-msg mono" id="promo-msg"></div>
+      <div class="drawer-total mono">
+        <span class="dim">SUBTOTAL</span>
+        <span class="odo" id="drawer-subtotal">€0</span>
+      </div>
+      <button class="btn btn--cyan btn--block magnetic" id="to-checkout" data-cursor="lock">[ PROCEED TO CHECKOUT ▸ ]</button>
+    </footer>
+  </aside>
+
+  <!-- ═══════════════ CHECKOUT MODAL ═══════════════ -->
+  <div class="modal" id="checkout" aria-hidden="true" aria-label="Checkout">
+    <div class="modal-card">
+      <button class="modal-close" id="close-checkout" data-cursor="lock" aria-label="Close checkout">×</button>
+      <div class="co-progress"><span class="co-bar" id="co-bar"></span></div>
+      <p class="co-stepname mono" id="co-stepname">01 // CONTACT</p>
+
+      <!-- step 1: contact -->
+      <div class="co-step" data-step="1">
+        <h3 class="co-h mono">&gt; identify operator</h3>
+        <label class="co-label mono">EMAIL <span class="req">*</span></label>
+        <input type="email" id="co-email" class="co-input" placeholder="you@domain.gg" data-cursor="lock" />
+        <label class="co-label mono">DISCORD / IGN <span class="req">*</span></label>
+        <input type="text" id="co-handle" class="co-input" placeholder="yourtag#0000" data-cursor="lock" />
+        <p class="co-err mono" id="co-err-1"></p>
+        <button class="btn btn--cyan btn--block magnetic" id="co-next-1" data-cursor="lock">[ CONTINUE ▸ ]</button>
+      </div>
+
+      <!-- step 2: payment -->
+      <div class="co-step" data-step="2" hidden>
+        <h3 class="co-h mono">&gt; select payment vector</h3>
+        <div class="co-pays" id="co-pays">
+          <button class="co-pay is-on" data-pay="card" data-cursor="lock">CARD</button>
+          <button class="co-pay" data-pay="twint" data-cursor="lock">TWINT</button>
+          <button class="co-pay" data-pay="paypal" data-cursor="lock">PAYPAL</button>
+          <button class="co-pay" data-pay="crypto" data-cursor="lock">CRYPTO</button>
+        </div>
+        <div class="co-card-fields" id="co-card-fields">
+          <label class="co-label mono">CARD NUMBER</label>
+          <input type="text" id="co-cardnum" class="co-input" placeholder="4242 4242 4242 4242" inputmode="numeric" data-cursor="lock" />
+          <div class="co-row">
+            <div><label class="co-label mono">EXP</label><input type="text" id="co-exp" class="co-input" placeholder="12 / 28" data-cursor="lock" /></div>
+            <div><label class="co-label mono">CVC</label><input type="text" id="co-cvc" class="co-input" placeholder="•••" data-cursor="lock" /></div>
+          </div>
+        </div>
+        <p class="co-demo mono"><i class="dot-live"></i> DEMO GATEWAY — no real charge is made.</p>
+        <p class="co-err mono" id="co-err-2"></p>
+        <div class="co-actions">
+          <button class="btn btn--ghost magnetic" id="co-back-2" data-cursor="lock">◂ BACK</button>
+          <button class="btn btn--cyan magnetic" id="co-next-2" data-cursor="lock">[ REVIEW ▸ ]</button>
+        </div>
+      </div>
+
+      <!-- step 3: confirm -->
+      <div class="co-step" data-step="3" hidden>
+        <h3 class="co-h mono">&gt; confirm &amp; deploy</h3>
+        <div class="co-summary" id="co-summary"></div>
+        <div class="co-total mono"><span class="dim">TOTAL</span><span class="odo" id="co-total">€0</span></div>
+        <div class="co-actions">
+          <button class="btn btn--ghost magnetic" id="co-back-3" data-cursor="lock">◂ BACK</button>
+          <button class="btn btn--cyan magnetic" id="co-confirm" data-cursor="lock">[ CONFIRM PURCHASE ]</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SUCCESS OVERLAY ═══════════════ -->
+  <div class="success" id="success" aria-hidden="true">
+    <div class="success-inner">
+      <div class="success-emblem" id="success-emblem"></div>
+      <pre class="success-log mono" id="success-log"></pre>
+      <p class="success-order mono">ORDER ID <span id="success-order">SNG-000000</span></p>
+      <a href="#" class="btn btn--cyan magnetic" id="success-discord" data-cursor="lock">[ JOIN DISCORD FOR DELIVERY ▸ ]</a>
+      <button class="success-close mono" id="success-close" data-cursor="lock">&gt; close terminal</button>
+    </div>
+  </div>
+
+  <!-- breach overlay canvas (created on demand by main.js) -->
+
+  <!-- ░░ libs (CDN) ░░ -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+
+  <!-- ░░ app ░░ (defer: load in order, run after parse, before DOMContentLoaded) -->
+  <script defer src="js/data.js"></script>
+  <script defer src="js/cart.js"></script>
+  <script defer src="js/emblem.js"></script>
+  <script defer src="js/shaderbg.js"></script>
+  <script defer src="js/main.js"></script>
+</body>
+</html>

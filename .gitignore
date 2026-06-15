@@ -1,0 +1,7 @@
+# logs / os cruft
+*.log
+.DS_Store
+Thumbs.db
+node_modules/
+.tunnel.log
+.srv.log
