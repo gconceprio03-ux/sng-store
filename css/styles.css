@@ -736,9 +736,17 @@ body.godmode::after {
   position: absolute; top: 46%; left: 50%; width: min(60vw, 600px); aspect-ratio: 1;
   transform: translate(-50%,-50%); z-index: 0; pointer-events: none; border-radius: 50%;
   background: conic-gradient(from 0deg, transparent, rgba(0,229,255,0.30), transparent 28%, rgba(176,38,255,0.30), transparent 58%, rgba(255,45,110,0.18), transparent 88%);
-  filter: blur(6px); mix-blend-mode: screen; opacity: 0.55; animation: spin 16s linear infinite;
+  filter: blur(6px); mix-blend-mode: screen; opacity: 0.4; animation: spin 16s linear infinite;
   -webkit-mask: radial-gradient(circle, transparent 41%, #000 43%, #000 59%, transparent 62%);
   mask: radial-gradient(circle, transparent 41%, #000 43%, #000 59%, transparent 62%);
+}
+.hero-rays {
+  position: absolute; top: 46%; left: 50%; width: 150vmax; height: 150vmax;
+  transform: translate(-50%, -50%); z-index: 0; pointer-events: none; mix-blend-mode: screen; opacity: 0.5;
+  background: repeating-conic-gradient(from 0deg, transparent 0deg 7deg, rgba(0,229,255,0.05) 7deg 9deg, transparent 9deg 17deg, rgba(176,38,255,0.045) 17deg 19deg);
+  -webkit-mask: radial-gradient(closest-side, transparent 7%, #000 24%, transparent 74%);
+  mask: radial-gradient(closest-side, transparent 7%, #000 24%, transparent 74%);
+  animation: spin 80s linear infinite;
 }
 .hero-orbit { position: absolute; top: 46%; left: 50%; width: min(92vw, 880px); aspect-ratio: 1; transform: translate(-50%,-50%); z-index: 0; pointer-events: none; opacity: 0.26; animation: spin 80s linear infinite; }
 .orb-em { position: absolute; transform: translate(-50%,-50%); }
@@ -807,7 +815,7 @@ body.godmode::after {
 }
 @media (prefers-reduced-motion: reduce) {
   .shaderbg { display: none; }
-  .shard, .hero-halo, .hero-orbit, .spin-badge svg, .boot-emblem svg, .boot-grid, .vh-scan, .vh-corner { animation: none !important; }
+  .shard, .hero-halo, .hero-rays, .hero-orbit, .spin-badge svg, .boot-emblem svg, .boot-grid, .vh-scan, .vh-corner { animation: none !important; }
   .vh-scan { display: none; }
   .boot-scan { display: none; }
   .spine, .boot-fx { display: none; }

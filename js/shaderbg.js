@@ -19,21 +19,26 @@
     "float noise(vec2 p){ vec2 i=floor(p), f=fract(p); vec2 u=f*f*(3.0-2.0*f);",
     "  return mix(mix(hash(i),hash(i+vec2(1,0)),u.x), mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),u.x), u.y); }",
     "float fbm(vec2 p){ float v=0.0, a=0.5; mat2 m=mat2(1.6,1.2,-1.2,1.6);",
-    "  for(int i=0;i<5;i++){ v+=a*noise(p); p=m*p; a*=0.5; } return v; }",
+    "  for(int i=0;i<6;i++){ v+=a*noise(p); p=m*p; a*=0.5; } return v; }",
     "void main(){",
     "  vec2 p=(gl_FragCoord.xy-0.5*u_res.xy)/u_res.y;",
-    "  float t=u_time*0.05;",
-    "  vec2 q=vec2(fbm(p*1.4+t), fbm(p*1.4-t+5.2));",
-    "  vec2 r=vec2(fbm(p*1.4+q*1.8+vec2(1.7,9.2)+0.13*t), fbm(p*1.4+q*1.8+vec2(8.3,2.8)-0.11*t));",
-    "  float f=fbm(p*1.4+r*2.0);",
+    "  float t=u_time*0.045;",
+    // double domain warp -> flowing plasma
+    "  vec2 q=vec2(fbm(p*1.3+vec2(0.0,t)), fbm(p*1.3+vec2(5.2,-t)));",
+    "  vec2 r=vec2(fbm(p*1.3+q*2.0+vec2(1.7,9.2)+0.15*t), fbm(p*1.3+q*2.0+vec2(8.3,2.8)-0.12*t));",
+    "  float f=fbm(p*1.3+r*2.2);",
+    // glowing filaments (sharpened high-field veins)
+    "  float fil=smoothstep(0.58,0.92,f) + 0.55*smoothstep(0.72,0.97,fbm(p*2.6+r*1.4+t));",
     "  vec3 cyan=vec3(0.0,0.9,1.0); vec3 violet=vec3(0.69,0.15,1.0); vec3 mag=vec3(1.0,0.18,0.43);",
-    "  vec3 col=mix(violet, cyan, clamp(f*1.4,0.0,1.0));",
-    "  col=mix(col, mag, clamp(length(r)*0.5-0.2,0.0,1.0)*0.45);",
-    "  col *= 0.10 + 0.85*f*f;",                              // field-driven brightness
-    "  float vig=smoothstep(1.25,0.15,length(p)); col*=vig;",
-    "  col=mix(vec3(0.027,0.02,0.063), col, 0.85);",          // sit on bg #070510
-    "  float md=length(p-u_mouse); col += cyan*0.10*exp(-md*3.2);",
-    "  col *= 0.46;",                                         // dim — now visible site-wide, text must stay readable
+    "  vec3 col=mix(violet, cyan, clamp(f*1.5,0.0,1.0));",
+    "  col=mix(col, mag, clamp(length(r)*0.6-0.15,0.0,1.0)*0.5);",
+    "  col *= 0.10 + 0.7*f*f;",
+    "  col += fil * mix(cyan, violet, 0.5) * 0.55;",          // luminous veins
+    "  col *= 0.9 + 0.13*sin(u_time*0.6);",                   // slow energy pulse
+    "  float vig=smoothstep(1.32,0.12,length(p)); col*=vig;",
+    "  col=mix(vec3(0.027,0.02,0.063), col, 0.9);",
+    "  float md=length(p-u_mouse); col += cyan*0.13*exp(-md*2.8);", // mouse glow
+    "  col *= 0.5;",                                          // keep readable behind text
     "  gl_FragColor=vec4(col, 1.0);",
     "}"
   ].join("\n");

@@ -41,8 +41,8 @@
   // Per-division boost price (in CURRENCY units). Rises steeply with tier:
   // higher elo = harder = pricier per division. Champion is a flat apex jump.
   const PER_DIVISION = {
-    copper: 2, bronze: 3, silver: 4, gold: 6,
-    platinum: 9, emerald: 14, diamond: 22, champion: 70,
+    copper: 1, bronze: 2, silver: 3, gold: 4,
+    platinum: 6, emerald: 9, diamond: 14, champion: 45,
   };
 
   // Build a flat, ordered list of rank "steps" so the calculator can measure
