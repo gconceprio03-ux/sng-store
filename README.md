@@ -1,5 +1,7 @@
 # SNG — R6 Ranked Accounts & Boosting
 
+🌐 **Live:** https://gconceprio03-ux.github.io/sng-store/ — deploy automatico via GitHub Pages (branch `main`, push = aggiornamento).
+
 Sito vetrina + checkout in stile **neon cyber / glitch** per la vendita di account Rainbow Six Siege e servizi di boosting. Single-page, animazioni pesanti (smooth-scroll, cursore reticolo, effetto *breach* su canvas, emblemi di rank procedurali, calcolatore boost interattivo).
 
 Brand: **SNG** · Tagline: *Rank is a system. We breach it.*
