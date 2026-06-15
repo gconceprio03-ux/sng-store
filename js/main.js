@@ -145,6 +145,25 @@
       });
     }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
     revealScan();
+
+    // Belt-and-suspenders: on scroll, reveal any .reveal whose top is near the
+    // viewport. Guarantees cards show even if an IO callback is missed, and works
+    // with Lenis (which emits scroll events). Coalesced to one check per frame.
+    var queued = false;
+    window.addEventListener("scroll", function () {
+      if (queued) return; queued = true;
+      requestAnimationFrame(function () {
+        queued = false;
+        var vh = window.innerHeight;
+        $$(".reveal:not(.is-visible)").forEach(function (el) {
+          if (el.getBoundingClientRect().top < vh * 1.15) {
+            el.classList.add("is-visible");
+            var b = el.querySelector(".acard-bar i"); if (b && b.dataset.w) b.style.width = b.dataset.w;
+            if (el.classList.contains("lnode")) el.classList.add("lit");
+          }
+        });
+      });
+    }, { passive: true });
   }
   // Observe any not-yet-revealed .reveal element. MUST be called after injecting
   // dynamic content (cards/nodes built after init), or those stay at opacity:0.
