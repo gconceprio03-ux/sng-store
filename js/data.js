@@ -13,14 +13,14 @@
   /* ---- Currency -----------------------------------------------------------
      One place to change it. EUR by default (European audience).
      To switch: set symbol + code, the whole site follows.                    */
-  const CURRENCY = { symbol: "€", code: "EUR", position: "prefix" };
+  const CURRENCY = { symbol: "$", code: "USD", position: "prefix" }; // matches Eldorado (USD)
 
   function price(n) {
-    const v = Math.round(Number(n));
-    const s = v.toLocaleString("en-US");
-    return CURRENCY.position === "prefix"
-      ? CURRENCY.symbol + s
-      : s + CURRENCY.symbol;
+    const num = Number(n) || 0;
+    const s = (Math.round(num * 100) % 100 === 0)
+      ? num.toLocaleString("en-US", { maximumFractionDigits: 0 })
+      : num.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return CURRENCY.position === "prefix" ? CURRENCY.symbol + s : s + CURRENCY.symbol;
   }
 
   /* ---- R6 Ranked 2.0 ladder ----------------------------------------------
@@ -144,72 +144,95 @@
     };
   }
 
-  /* ---- Accounts catalog (SAMPLE) ------------------------------------------
-     Replace with your real stock. `rankId` references STEPS[].label.          */
+  /* ---- Accounts catalog — MIRRORED FROM ELDORADO (seller SNG_Gnesa) --------
+     Real listings. `eldorado` deep-links to the live listing (real checkout +
+     TradeShield). blackIce null = present, count not stated. Refresh when stock
+     changes. Prices in USD to match Eldorado.                                  */
+  const EL = "https://www.eldorado.gg/en/rainbow-six-siege-accounts/oa/";
   const ACCOUNTS = [
-    {
-      id: "acc-dia-01", tag: "PHANTOM-DIA", rankLabel: "Diamond III",
-      tierKey: "diamond", price: 79, level: 312, kd: 1.84,
-      region: "EU", operators: 68, alphaPacks: 12, mmr: 4120,
-      badge: "RARE", featured: true,
-      perks: ["Full email access", "Original owner", "Rare Black Ice", "No bans"],
-    },
-    {
-      id: "acc-champ-01", tag: "APEX-CHAMP", rankLabel: "Champion",
-      tierKey: "champion", price: 159, level: 540, kd: 2.31,
-      region: "EU", operators: 74, alphaPacks: 31, mmr: 5340,
-      badge: "ELITE", featured: true,
-      perks: ["Full email access", "Champion charm Y6", "20+ Elites", "No bans"],
-    },
-    {
-      id: "acc-plat-01", tag: "GHOST-PLAT", rankLabel: "Platinum II",
-      tierKey: "platinum", price: 45, level: 207, kd: 1.42,
-      region: "EU", operators: 61, alphaPacks: 6, mmr: 3450,
-      badge: "VALUE", featured: true,
-      perks: ["Full email access", "Original owner", "5 Elites", "No bans"],
-    },
-    {
-      id: "acc-emer-01", tag: "VIPER-EMER", rankLabel: "Emerald IV",
-      tierKey: "emerald", price: 65, level: 254, kd: 1.61,
-      region: "NA", operators: 64, alphaPacks: 9, mmr: 3780,
-      badge: "RARE", featured: false,
-      perks: ["Full email access", "Original owner", "Rare seasonals", "No bans"],
-    },
-    {
-      id: "acc-dia-02", tag: "ONYX-DIA", rankLabel: "Diamond I",
-      tierKey: "diamond", price: 89, level: 388, kd: 1.97,
-      region: "EU", operators: 70, alphaPacks: 17, mmr: 4480,
-      badge: "RARE", featured: false,
-      perks: ["Full email access", "Pro League sets", "10+ Elites", "No bans"],
-    },
-    {
-      id: "acc-gold-01", tag: "RECON-GOLD", rankLabel: "Gold I",
-      tierKey: "gold", price: 25, level: 142, kd: 1.18,
-      region: "EU", operators: 55, alphaPacks: 3, mmr: 3050,
-      badge: "VALUE", featured: false,
-      perks: ["Full email access", "Original owner", "Starter Elites", "No bans"],
-    },
-    {
-      id: "acc-plat-02", tag: "FROST-PLAT", rankLabel: "Platinum IV",
-      tierKey: "platinum", price: 39, level: 176, kd: 1.33,
-      region: "NA", operators: 58, alphaPacks: 4, mmr: 3260,
-      badge: "VALUE", featured: false,
-      perks: ["Full email access", "Original owner", "3 Elites", "No bans"],
-    },
-    {
-      id: "acc-champ-02", tag: "ZERO-CHAMP", rankLabel: "Champion",
-      tierKey: "champion", price: 179, level: 612, kd: 2.55,
-      region: "EU", operators: 74, alphaPacks: 44, mmr: 5610,
-      badge: "ELITE", featured: false,
-      perks: ["Full email access", "Top-500 history", "30+ Elites", "No bans"],
-    },
-    {
-      id: "acc-emer-02", tag: "NOVA-EMER", rankLabel: "Emerald II",
-      tierKey: "emerald", price: 69, level: 281, kd: 1.72,
-      region: "EU", operators: 66, alphaPacks: 11, mmr: 3920,
-      badge: "RARE", featured: false,
-      perks: ["Full email access", "Original owner", "Black Ice x2", "No bans"],
-    },
+    { id: "326a6f2f", tag: "ICEBREAKER", rankLabel: "Ranked Ready", tierKey: "platinum",
+      price: 50, level: 145, blackIce: 21, universals: 0, elites: 0, operators: "50+",
+      delivery: "Instant", region: "PC", badge: "RARE", featured: false,
+      perks: ["21× Black Ice", "Full access", "Original email", "10-day warranty"],
+      eldorado: EL + "326a6f2f-ed7c-43ef-c34f-08dec868ca2f" },
+
+    { id: "1f4f9f77", tag: "SIXSHOT", rankLabel: "Ranked Ready", tierKey: "emerald",
+      price: 67.89, level: 164, blackIce: 15, universals: 6, elites: 0, operators: "50+",
+      delivery: "Instant", region: "PC", badge: "RARE", featured: false,
+      perks: ["15× Black Ice", "6 Universals", "Full access", "Original email"],
+      eldorado: EL + "1f4f9f77-703f-4935-f1b0-08dec87a97bf" },
+
+    { id: "66f99966", tag: "ROOKIE", rankLabel: "Ranked Ready", tierKey: "gold",
+      price: 30, level: 78, blackIce: 1, universals: 1, elites: 0, operators: "32",
+      delivery: "Instant", region: "PC", badge: "VALUE", featured: false,
+      perks: ["1 Universal", "1 Seasonal", "Full access", "Original email"],
+      eldorado: EL + "66f99966-1635-4a30-e4cb-08dec868cb06" },
+
+    { id: "f4cc805d", tag: "WHITEOUT", rankLabel: "Ranked Ready", tierKey: "platinum",
+      price: 50, level: 157, blackIce: 14, universals: 0, elites: 0, operators: "50+",
+      delivery: "Instant", region: "PC", badge: "VALUE", featured: false,
+      perks: ["14× Black Ice", "Full access", "Original email", "10-day warranty"],
+      eldorado: EL + "f4cc805d-bef8-418e-a3ce-08decaac4263" },
+
+    { id: "d9311845", tag: "AVALANCHE", rankLabel: "Ranked Ready", tierKey: "emerald",
+      price: 70, level: 180, blackIce: 34, universals: 3, elites: 1, operators: "50+",
+      delivery: "Instant", region: "PC", badge: "ELITE", featured: false,
+      perks: ["34× Black Ice", "3 Universals", "1 Elite", "Full access"],
+      eldorado: EL + "d9311845-8ad1-4396-71f7-08dec86aed0a" },
+
+    { id: "ce468a73", tag: "WARDEN", rankLabel: "Platinum", tierKey: "platinum",
+      price: 70, level: 278, blackIce: 35, universals: 16, elites: 0, operators: "50+",
+      delivery: "Instant", region: "PC", badge: "ELITE", featured: false,
+      perks: ["35× Black Ice", "16 Universals", "Rare skins", "Full email access"],
+      eldorado: EL + "ce468a73-c9c5-48a0-d286-08dec7866007" },
+
+    { id: "848655a6", tag: "FROSTBYTE", rankLabel: "Ranked Ready", tierKey: "platinum",
+      price: 45, level: 138, blackIce: 12, universals: 1, elites: 0, operators: "50+",
+      delivery: "Instant", region: "PC", badge: "VALUE", featured: false,
+      perks: ["12× Black Ice", "1 Universal", "2 Seasonals", "Full access"],
+      eldorado: EL + "848655a6-43e0-46d8-390e-08dec868c63a" },
+
+    { id: "522fb074", tag: "WARLORD", rankLabel: "Ranked Ready", tierKey: "platinum",
+      price: 50, level: 173, blackIce: 19, universals: 1, elites: 8, operators: "50+",
+      delivery: "Instant", region: "PC", badge: "RARE", featured: false,
+      perks: ["19× Black Ice", "8 Elites", "1 Universal", "Full access"],
+      eldorado: EL + "522fb074-1227-467b-a416-08decaac424b" },
+
+    { id: "3a653f7c", tag: "OVERLORD", rankLabel: "Diamond", tierKey: "diamond",
+      price: 110, level: 599, blackIce: 24, universals: 8, elites: 0, operators: "50+",
+      delivery: "Instant", region: "PC", badge: "ELITE", featured: false,
+      perks: ["Diamond ×1", "24× Black Ice", "8 Universals", "5 Old Pro League sets"],
+      eldorado: EL + "3a653f7c-1d69-402b-80db-08dec87a97c0" },
+
+    { id: "0f11b4fb", tag: "GLACIER", rankLabel: "Platinum", tierKey: "platinum",
+      price: 105, level: 363, blackIce: 64, universals: 4, elites: 14, operators: "50+",
+      delivery: "Instant", region: "PC", badge: "ELITE", featured: false,
+      perks: ["64× Black Ice", "14 Elites", "4 Universals", "28 Seasonals"],
+      eldorado: EL + "0f11b4fb-bbab-4d7e-c01a-08dec868c63a" },
+
+    { id: "9b9746d1", tag: "ELDORADO", rankLabel: "Ranked Ready", tierKey: "emerald",
+      price: 80, level: 120, blackIce: 12, universals: 0, elites: 0, operators: "50+",
+      delivery: "1 day", region: "PC", badge: "RARE", featured: false,
+      perks: ["Obsidian", "Blue Nebula", "El Dorado", "12× Black Ice", "Full access"],
+      eldorado: EL + "9b9746d1-b31b-4447-2bbe-08deb7d2263f" },
+
+    { id: "8784497c", tag: "APEX", rankLabel: "Champion", tierKey: "champion",
+      price: 100, level: 172, blackIce: null, universals: 0, elites: 0, operators: "73",
+      delivery: "1 day", region: "PC", badge: "ELITE", featured: false,
+      perks: ["Champion", "Triple Helix", "73 Operators", "Full access"],
+      eldorado: EL + "8784497c-1595-4739-f91b-08deb7d222b2" },
+
+    { id: "f1d15013", tag: "ARSENAL", rankLabel: "Ranked Ready", tierKey: "emerald",
+      price: 80, level: 258, blackIce: 28, universals: 0, elites: 7, operators: "50+",
+      delivery: "1 day", region: "PC", badge: "ELITE", featured: false,
+      perks: ["452+ skins", "Sanguine Arsenic", "28× Black Ice", "7 Elites"],
+      eldorado: EL + "f1d15013-2551-4eee-93a5-08deb7d22420" },
+
+    { id: "cc1c9902", tag: "SOVEREIGN", rankLabel: "Diamond ×5", tierKey: "diamond",
+      price: 180, level: 283, blackIce: 30, universals: 0, elites: 20, operators: "50+",
+      delivery: "1 day", region: "PC", badge: "ELITE", featured: true,
+      perks: ["Diamond ×5", "Obsidian", "Blue Nebula", "Aki No Tsuru", "20 Elites", "30× Black Ice"],
+      eldorado: EL + "cc1c9902-f379-42b9-563c-08deb7d221b3" },
   ];
 
   /* ---- "Why us" feature pillars ------------------------------------------ */

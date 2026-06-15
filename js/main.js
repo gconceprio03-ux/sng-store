@@ -334,45 +334,46 @@
 
   /* ---------------- account grid ---------------- */
   function accountCard(acc) {
-    var strength = Math.min(1, acc.kd / 2.6);
+    var bi = acc.blackIce == null ? "✓" : acc.blackIce;
+    var hi = acc.universals > 0 ? { l: "UNIV", v: acc.universals }
+      : acc.elites > 0 ? { l: "ELITE", v: acc.elites }
+      : { l: "ACCESS", v: "FULL" };
+    var strength = Math.min(1, (acc.level / 600) * 0.5 + ((acc.blackIce || 10) / 64) * 0.5);
     var el = document.createElement("article");
     el.className = "acard reveal spot";
     el.setAttribute("data-tier", acc.tierKey);
     el.setAttribute("data-id", acc.id);
     el.innerHTML =
+      '<div class="acard-art">' + (window.SNGArt ? SNGArt.scene(acc.tierKey, acc.id) : Emblem.draw(acc.tierKey, { size: 104, energy: 1 })) + '</div>' +
       '<div class="acard-top"><span class="acard-badge" data-b="' + acc.badge + '">' + acc.badge + '</span>' +
-      '<span class="acard-region mono">' + acc.region + ' · PC</span></div>' +
-      '<div class="acard-emblem">' + Emblem.draw(acc.tierKey, { size: 116, energy: 0.7 }) + '</div>' +
+      '<span class="acard-region mono">' + acc.region + ' · ' + acc.delivery + '</span></div>' +
       '<div class="acard-rank">' + acc.rankLabel + '</div>' +
-      '<div class="acard-tag mono">// ' + acc.tag + '</div>' +
+      '<div class="acard-tag mono">// ' + acc.tag + ' · LVL ' + acc.level + '</div>' +
       '<div class="acard-stats">' +
         '<div class="acard-stat mono"><span>LVL</span> <b>' + acc.level + '</b></div>' +
-        '<div class="acard-stat mono"><span>K/D</span> <b>' + acc.kd.toFixed(2) + '</b></div>' +
+        '<div class="acard-stat mono"><span>B.ICE</span> <b>' + bi + '</b></div>' +
         '<div class="acard-stat mono"><span>OPS</span> <b>' + acc.operators + '</b></div>' +
-        '<div class="acard-stat mono"><span>MMR</span> <b>' + acc.mmr + '</b></div>' +
+        '<div class="acard-stat mono"><span>' + hi.l + '</span> <b>' + hi.v + '</b></div>' +
       '</div>' +
       '<div class="acard-bar"><i data-w="' + Math.round(strength * 100) + '%"></i></div>' +
+      '<div class="acard-perks mono">' + acc.perks.slice(0, 3).map(function (p) { return "<span>" + p + "</span>"; }).join("") + '</div>' +
       '<div class="acard-foot"><span class="acard-price">' + D.price(acc.price) + '</span>' +
-      '<button class="acard-add" data-cursor="lock">[ BREACH // ADD ]</button></div>';
+      '<a class="acard-add" href="' + acc.eldorado + '" target="_blank" rel="noopener" data-cursor="lock">[ SECURE BUY ▸ ]</a></div>';
 
     el.addEventListener("mouseenter", function () { setReactorHue(acc.tierKey); });
     if (!reduced) {
       el.addEventListener("mousemove", function (e) {
         var r = el.getBoundingClientRect();
-        var rx = ((e.clientY - r.top) / r.height - 0.5) * -8;
-        var ry = ((e.clientX - r.left) / r.width - 0.5) * 8;
-        el.style.transform = "perspective(800px) rotateX(" + rx + "deg) rotateY(" + ry + "deg) translateY(-8px)";
+        var rx = ((e.clientY - r.top) / r.height - 0.5) * -6;
+        var ry = ((e.clientX - r.left) / r.width - 0.5) * 6;
+        el.style.transform = "perspective(900px) rotateX(" + rx + "deg) rotateY(" + ry + "deg) translateY(-6px)";
       });
       el.addEventListener("mouseleave", function () { el.style.transform = ""; });
     }
-    el.querySelector(".acard-add").addEventListener("click", function (e) {
-      var added = Cart.add({ key: acc.id, kind: "account", title: acc.rankLabel, subtitle: acc.tag + " · " + acc.region, price: acc.price, unique: true, meta: { tier: acc.tierKey } });
-      if (added) {
-        var r = el.getBoundingClientRect();
-        runBreach(r.left + r.width / 2, r.top + r.height / 2, acc.tierKey);
-      } else {
-        flashCart();
-      }
+    // buy = breach flourish, then the listing opens on Eldorado (real checkout + TradeShield)
+    el.querySelector(".acard-add").addEventListener("click", function () {
+      var r = el.getBoundingClientRect();
+      runBreach(r.left + r.width / 2, r.top + r.height / 2, acc.tierKey);
     });
     return el;
   }
@@ -395,22 +396,23 @@
   /* ---------------- featured high-roller ---------------- */
   function buildFeatured() {
     var host = $("#featured-card"); if (!host) return;
-    var acc = D.ACCOUNTS.filter(function (a) { return a.tierKey === "champion"; })[0] || D.ACCOUNTS[0];
+    var acc = D.ACCOUNTS.filter(function (a) { return a.featured; })[0] ||
+      D.ACCOUNTS.slice().sort(function (a, b) { return b.price - a.price; })[0];
     host.innerHTML =
       '<span class="featured-tear" id="featured-tear"></span>' +
       '<div class="featured-emblem" id="featured-emblem">' + Emblem.draw(acc.tierKey, { size: 220, energy: 1 }) + '</div>' +
       '<div class="featured-info">' +
-        '<p class="featured-eyebrow mono">★ RARE DROP // FEATURED</p>' +
-        '<h3>' + acc.rankLabel + ' · ' + acc.tag + '</h3>' +
+        '<p class="featured-eyebrow mono">★ HIGH-ROLLER // FEATURED</p>' +
+        '<h3>' + acc.tag + ' · LVL ' + acc.level + '</h3>' +
+        '<p class="featured-sub mono">' + acc.rankLabel + ' · ' + acc.region + ' · ' + acc.delivery + ' delivery</p>' +
         '<ul class="featured-perks">' + acc.perks.map(function (p) { return "<li>" + p + "</li>"; }).join("") + '</ul>' +
         '<div class="featured-buy"><span class="featured-price">' + D.price(acc.price) + '</span>' +
-        '<button class="btn btn--ghost magnetic" data-cursor="lock" id="featured-add">[ BREACH // ADD TO CART ]</button></div>' +
+        '<a class="btn btn--ghost magnetic" data-cursor="lock" id="featured-add" href="' + acc.eldorado + '" target="_blank" rel="noopener">[ SECURE BUY ON ELDORADO &#9656; ]</a></div>' +
       '</div>';
     setReactorHue(acc.tierKey);
     $("#featured-add").addEventListener("click", function () {
-      var ok = Cart.add({ key: acc.id, kind: "account", title: acc.rankLabel, subtitle: acc.tag + " · " + acc.region, price: acc.price, unique: true, meta: { tier: acc.tierKey } });
       var r = host.getBoundingClientRect();
-      if (ok) runBreach(r.left + r.width / 2, r.top + r.height / 2, acc.tierKey); else flashCart();
+      runBreach(r.left + r.width / 2, r.top + r.height / 2, acc.tierKey);
     });
     // 3D tilt
     var emblem = $("#featured-emblem svg"), tear = $("#featured-tear");
