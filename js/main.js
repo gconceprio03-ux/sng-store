@@ -259,11 +259,13 @@
     setReactorHue("diamond");
     var heroH = hero ? hero.offsetHeight : 800, vh = window.innerHeight || 800, ticking = false;
     window.addEventListener("resize", function () { if (hero) heroH = hero.offsetHeight; vh = window.innerHeight || 800; }, { passive: true });
+    var prog = $("#scrollprog");
     function apply() {
       ticking = false;
       var y = window.scrollY;
       reactor.classList.toggle("on", y > heroH * 0.7);
       if (orb && !reduced) orb.style.opacity = String(0.9 * (1 - Math.min(1, y / vh)));
+      if (prog) { var max = document.documentElement.scrollHeight - vh; prog.style.width = (max > 0 ? Math.min(100, (y / max) * 100) : 0) + "%"; }
     }
     window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(apply); } }, { passive: true });
     apply();
@@ -377,6 +379,7 @@
     el.setAttribute("data-id", acc.id);
     el.innerHTML =
       '<div class="acard-art">' + (window.SNGArt ? SNGArt.scene(acc.tierKey, acc.id) : Emblem.draw(acc.tierKey, { size: 104, energy: 1 })) + '</div>' +
+      '<span class="acard-sheen" aria-hidden="true"></span>' +
       '<div class="acard-top"><span class="acard-badge" data-b="' + acc.badge + '">' + acc.badge + '</span>' +
       '<span class="acard-region mono">' + acc.region + ' · ' + acc.delivery + '</span></div>' +
       '<div class="acard-rank">' + acc.rankLabel + '</div>' +
@@ -396,9 +399,11 @@
     if (!reduced) {
       el.addEventListener("mousemove", function (e) {
         var r = el.getBoundingClientRect();
-        var rx = ((e.clientY - r.top) / r.height - 0.5) * -6;
-        var ry = ((e.clientX - r.left) / r.width - 0.5) * 6;
+        var px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+        var rx = (py - 0.5) * -6, ry = (px - 0.5) * 6;
         el.style.transform = "perspective(900px) rotateX(" + rx + "deg) rotateY(" + ry + "deg) translateY(-6px)";
+        el.style.setProperty("--sx", (px * 100) + "%");
+        el.style.setProperty("--sy", (py * 100) + "%");
       });
       el.addEventListener("mouseleave", function () { el.style.transform = ""; });
     }

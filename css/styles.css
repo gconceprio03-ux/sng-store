@@ -142,6 +142,11 @@ input { font: inherit; }
   position: fixed; inset: 0; z-index: 9001; pointer-events: none;
   background: radial-gradient(120% 100% at 50% 40%, transparent 55%, rgba(0,0,0,0.55) 100%);
 }
+.scrollbar-progress {
+  position: fixed; top: 0; left: 0; height: 2px; width: 0; z-index: 9100; pointer-events: none;
+  background: linear-gradient(90deg, var(--neon-b), var(--neon-a), var(--accent));
+  box-shadow: 0 0 10px var(--neon-b);
+}
 
 /* ---------- custom cursor ---------- */
 #reticle, #trailer { position: fixed; top: 0; left: 0; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%); will-change: transform; }
@@ -326,7 +331,15 @@ input { font: inherit; }
 
 /* ═══════════════ section shells ═══════════════ */
 .vault, .calc, .ladder, .vouches, .how, .faq, .why { padding: clamp(4rem, 9vw, 8rem) clamp(1.2rem, 5vw, 4rem); position: relative; }
-.featured { padding: 0 clamp(1.2rem, 5vw, 4rem) clamp(3rem, 7vw, 6rem); }
+.featured { padding: 0 clamp(1.2rem, 5vw, 4rem) clamp(3rem, 7vw, 6rem); position: relative; }
+.featured::before {
+  content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: min(900px, 86%); height: 72%; z-index: 0; pointer-events: none; border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(255,45,110,0.20), rgba(176,38,255,0.10) 45%, transparent 72%);
+  filter: blur(42px); animation: featPulse 3.6s ease-in-out infinite;
+}
+@keyframes featPulse { 0%, 100% { opacity: 0.7; transform: translate(-50%,-50%) scale(1); } 50% { opacity: 1; transform: translate(-50%,-50%) scale(1.06); } }
+@media (prefers-reduced-motion: reduce) { .featured::before { animation: none; } }
 
 /* ═══════════════ THE VAULT ═══════════════ */
 .vault-filters { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2.6rem; }
@@ -383,10 +396,20 @@ input { font: inherit; }
 .acard-add:hover { background: var(--neon-b); color: #04121a; box-shadow: 0 0 18px rgba(0,229,255,0.5); }
 .acard.sold .acard-add { opacity: 0.5; pointer-events: none; }
 .acard.is-hidden { display: none; }
+/* holographic sheen — iridescent highlight that tracks the cursor (premium card feel) */
+.acard-sheen {
+  position: absolute; inset: 0; z-index: 5; pointer-events: none; opacity: 0; transition: opacity 0.35s;
+  background:
+    radial-gradient(220px circle at var(--sx, 50%) var(--sy, 50%), rgba(255,255,255,0.16), transparent 46%),
+    linear-gradient(115deg, transparent 30%, rgba(0,229,255,0.13) 43%, rgba(176,38,255,0.13) 52%, rgba(255,45,110,0.09) 61%, transparent 73%);
+  mix-blend-mode: screen;
+}
+.acard:hover .acard-sheen { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .acard-sheen { display: none; } }
 
 /* ═══════════════ FEATURED ═══════════════ */
 .featured-card {
-  position: relative; max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr; gap: 2rem; align-items: center;
+  position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr; gap: 2rem; align-items: center;
   padding: 2.2rem; background: linear-gradient(120deg, rgba(255,45,110,0.08), rgba(176,38,255,0.06));
   border: 1px solid rgba(255,45,110,0.3);
   clip-path: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px);
