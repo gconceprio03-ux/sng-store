@@ -15,6 +15,11 @@
      To switch: set symbol + code, the whole site follows.                    */
   const CURRENCY = { symbol: "$", code: "USD", position: "prefix" }; // matches Eldorado (USD)
 
+  /* ---- Discord (single source of truth) -----------------------------------
+     Every "Discord" link on the site reads from here (main.js wires it to all
+     [data-discord] elements). Swap this ONE value to update the whole site. */
+  const DISCORD = "https://discord.gg/wcSxmUcRqq"; // SNG store server (permanent invite)
+
   function price(n) {
     const num = Number(n) || 0;
     const s = (Math.round(num * 100) % 100 === 0)
@@ -32,9 +37,9 @@
     { key: "bronze",    name: "Bronze",    color: "#C77B43", divisions: 5 },
     { key: "silver",    name: "Silver",    color: "#9FB1C2", divisions: 5 },
     { key: "gold",      name: "Gold",      color: "#E8B84B", divisions: 5 },
-    { key: "platinum",  name: "Platinum",  color: "#37C3B8", divisions: 5 },
-    { key: "emerald",   name: "Emerald",   color: "#2ED17A", divisions: 5 },
-    { key: "diamond",   name: "Diamond",   color: "#6FD3FF", divisions: 5 },
+    { key: "platinum",  name: "Platinum",  color: "#2BB6D0", divisions: 5 },
+    { key: "emerald",   name: "Emerald",   color: "#20C9E0", divisions: 5 },
+    { key: "diamond",   name: "Diamond",   color: "#34E3FF", divisions: 5 },
     { key: "champion",  name: "Champion",  color: "#FF4D6D", divisions: 1 },
   ];
 
@@ -235,10 +240,41 @@
       eldorado: EL + "cc1c9902-f379-42b9-563c-08deb7d221b3" },
   ];
 
+  /* ---- DMA — R6S (FLAGSHIP) ----------------------------------------------
+     We don't sell hardware — we sell the SNG DMA access for R6S as a license
+     KEY. Time-based plans; the key is delivered on payment. This is the
+     headline product (top precedence on the page).
+     >> Edit plans/prices/build here. Prices in USD.                          */
+  const DMA = {
+    name: "SNG // DMA",
+    game: "Rainbow Six Siege",
+    status: "UNDETECTED",          // status pill copy
+    build: "Y10S2",                // currently-supported game build
+    updatedDays: 0,                // 0 = today (drives "updated" line)
+    plans: [
+      { id: "dma-1d",   label: "1 DAY",    days: 1,   price: 5,   tag: null },
+      { id: "dma-7d",   label: "7 DAYS",   days: 7,   price: 15,  tag: "POPULAR" },
+      { id: "dma-30d",  label: "30 DAYS",  days: 30,  price: 30,  tag: "BEST VALUE" },
+    ],
+    // marketing spec bullets shown in the feature matrix (label · detail)
+    features: [
+      { k: "Player ESP",     v: "operators · skeletons · health" },
+      { k: "Gadget intel",   v: "cams · traps · drones · reinforcements" },
+      { k: "2D radar",       v: "full-map live positions" },
+      { k: "Aim assist",     v: "smoothed · humanized" },
+      { k: "Stream-proof",   v: "clean on OBS / Discord" },
+      { k: "Key-locked",     v: "one key · one rig" },
+      { k: "Instant key",    v: "delivered the moment you pay" },
+      { k: "External read",  v: "second-PC DMA · zero injection" },
+    ],
+  };
+  // Per-day reference price (for the "/day" tag on plan cards). Lifetime omits it.
+  DMA.plans.forEach(function (p) { p.perDay = p.days ? p.price / p.days : null; });
+
   /* ---- "Why us" feature pillars ------------------------------------------ */
   const FEATURES = [
     { icon: "bolt", title: "Instant delivery", text: "Accounts dropped to your inbox in minutes, not days." },
-    { icon: "shield", title: "Lifetime warranty", text: "Full email access on every account, or your money back." },
+    { icon: "shield", title: "Replacement warranty", text: "Full email access on every account — replaced or refunded if access fails on arrival." },
     { icon: "ghost", title: "100% private", text: "Stealth boosting, VPN-matched, never linked to you." },
     { icon: "headset", title: "24/7 support", text: "Real humans on Discord, average reply under 4 minutes." },
   ];
@@ -252,9 +288,9 @@
   ];
 
   window.SNG = {
-    CURRENCY, price,
+    CURRENCY, price, DISCORD,
     TIERS, STEPS,
     BOOST_OPTIONS, boostQuote,
-    ACCOUNTS, FEATURES, STATS,
+    DMA, ACCOUNTS, FEATURES, STATS,
   };
 })();

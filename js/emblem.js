@@ -10,16 +10,19 @@
 (function () {
   "use strict";
 
-  // Metal-hue ramp keyed to tier (Copper warm -> Diamond cyan -> Champion magenta)
+  // Tier ramp: warm metals (copper→gold are authentic rank metals) climbing into
+  // the ICE family for the high tiers (platinum→emerald→diamond all in the blue
+  // axis, no green), with Champion as the single CRIMSON apex. Matches the site's
+  // disciplined ice + crimson system.
   const RAMP = {
     copper:   "#B8703A",
     bronze:   "#CD7F45",
     silver:   "#AEB9C7",
     gold:     "#F0C24B",
-    platinum: "#37C3B8",
-    emerald:  "#2ED17A",
-    diamond:  "#00E5FF",
-    champion: "#FF2D6E",
+    platinum: "#2BB6D0",
+    emerald:  "#20C9E0",
+    diamond:  "#34E3FF",
+    champion: "#FF2740",
   };
   const ORDER = ["copper","bronze","silver","gold","platinum","emerald","diamond","champion"];
 
