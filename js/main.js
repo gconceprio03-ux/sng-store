@@ -14,7 +14,7 @@
   var hasGSAP = !!window.gsap;
 
   // tier -> reactor hue (HSL)
-  var TIER_HUE = { copper: 24, bronze: 30, silver: 212, gold: 46, platinum: 174, emerald: 148, diamond: 188, champion: 338 };
+  var TIER_HUE = { copper: 24, bronze: 30, silver: 212, gold: 46, platinum: 189, emerald: 193, diamond: 190, champion: 352 };
   function setReactorHue(tierKey) {
     var h = TIER_HUE[tierKey];
     if (h != null) document.documentElement.style.setProperty("--reactor-hue", h);
@@ -31,17 +31,24 @@
 
   function init() {
     safe(function () { $("#year").textContent = new Date().getFullYear(); });
+    safe(wireDiscordLinks);
     [
       buildHudSigil, boot, initCursor, initMagnetic, initReveal, initScramble,
       initMarquees, initOpsTicker, initHeroParallax, initReactor,
       initSmoothScroll, initSpotlight, buildTrustStats,
-      buildDeliveries, buildAccounts, buildFeatured, buildFeatures, buildCalculator, buildLadder,
+      buildDeliveries, buildDMA, buildAccounts, buildFeatured, buildFeatures, buildCalculator, buildLadder,
       initFaq, initCartUI, initCheckout, initSuccess, initOverlayKeys,
       initKonami, initSound,
       initShaderBG, initShards, initSpine, initParallax
     ].forEach(safe);
     window.addEventListener("sng:cart", onCartChange);
     safe(onCartChange);
+  }
+
+  /* ---------------- discord links (one source of truth) ---------------- */
+  function wireDiscordLinks() {
+    var url = (D && D.DISCORD) || "#";
+    $$("[data-discord]").forEach(function (a) { a.setAttribute("href", url); });
   }
 
   /* ---------------- boot sequence ---------------- */
@@ -63,6 +70,7 @@
       "> sng.kernel :: init",
       "> mounting blacksite node ……… OK",
       "> uplink handshake …………… SECURE",
+      "> dma // r6s …………………… UNDETECTED",
       "> rank reactor …………………… ONLINE",
       "> 312 accounts indexed",
       "> breach protocols armed",
@@ -202,12 +210,13 @@
     var t = $("#ops-ticker");
     if (!t) return;
     var items = [
+      "▣ DMA // R6S — status UNDETECTED",
+      "▣ key #SNG-DMA-7E03 // delivered 0m06s",
       "▣ order #SNG-4417 // DIAMOND boost deployed",
       "▣ account ZERO-CHAMP // delivered 0m18s",
       "▣ 312 accounts in stock",
       "▣ avg reply 3m41s",
       "▣ replacement guarantee active",
-      "▣ region-lock options online",
     ];
     var s = items.join("    ·    ") + "    ·    ";
     t.innerHTML = "<span>" + s + "</span><span>" + s + "</span>";
@@ -243,7 +252,7 @@
       ctx.fillRect(0, 0, W, H);
       ctx.font = fontSize + "px monospace";
       for (var i = 0; i < cols; i++) {
-        ctx.fillStyle = Math.random() > 0.985 ? "rgba(176,38,255,0.55)" : "rgba(0,229,255,0.34)";
+        ctx.fillStyle = Math.random() > 0.985 ? "rgba(255,39,64,0.5)" : "rgba(52,227,255,0.34)";
         ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * fontSize, drops[i] * fontSize);
         if (drops[i] * fontSize > H && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
@@ -429,6 +438,104 @@
         });
       });
     });
+  }
+
+  /* ---------------- DMA key forge (flagship) ---------------- */
+  function buildDMA() {
+    var DMA = D.DMA; if (!DMA) return;
+    var plansWrap = $("#dma-plans"), featWrap = $("#dma-features"), keyEl = $("#dma-key");
+    if (!plansWrap) return;
+
+    // status / build line
+    var bEl = $("#dma-build"); if (bEl) bEl.textContent = DMA.build;
+    var uEl = $("#dma-updated"); if (uEl) uEl.textContent = DMA.updatedDays > 0 ? DMA.updatedDays + "d ago" : "today";
+    var sEl = $("#dma-status"); if (sEl) sEl.textContent = DMA.status;
+
+    // feature matrix
+    if (featWrap) {
+      featWrap.innerHTML = DMA.features.map(function (f) {
+        return '<div class="dma-feat"><span class="tick">▸</span><span><b>' + f.k + '</b><small>' + f.v + '</small></span></div>';
+      }).join("");
+    }
+
+    // plan cards (default to the POPULAR / 2nd plan)
+    var current = DMA.plans[1] || DMA.plans[0];
+    DMA.plans.forEach(function (p) {
+      var per = p.perDay ? D.price(Math.round(p.perDay * 100) / 100) + " /day" : "one-time";
+      var btn = document.createElement("button");
+      btn.className = "dma-plan" + (p === current ? " is-on" : "");
+      btn.setAttribute("data-plan", p.id);
+      btn.setAttribute("data-cursor", "lock");
+      btn.setAttribute("aria-pressed", p === current ? "true" : "false");
+      btn.innerHTML =
+        (p.tag ? '<span class="dma-plan-tag">' + p.tag + '</span>' : '') +
+        '<div class="dma-plan-label">' + p.label + '</div>' +
+        '<div class="dma-plan-price">' + D.price(p.price) + '</div>' +
+        '<div class="dma-plan-per mono">' + per + '</div>';
+      btn.addEventListener("click", function () { select(p, true); });
+      plansWrap.appendChild(btn);
+    });
+
+    function select(p, animateKey) {
+      current = p;
+      $$(".dma-plan", plansWrap).forEach(function (el) {
+        var on = el.dataset.plan === p.id;
+        el.classList.toggle("is-on", on);
+        el.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      var nm = $("#dma-plan-name"); if (nm) nm.textContent = p.label;
+      var ex = $("#dma-expires"); if (ex) ex.textContent = p.days ? "+" + p.days + "d" : "PERMANENT";
+      var priceEl = $("#dma-price");
+      if (priceEl) { priceEl.textContent = D.price(p.price); priceEl.classList.remove("roll"); void priceEl.offsetWidth; priceEl.classList.add("roll"); }
+      setReactorHue("champion"); // crimson reactor — flagship
+      setKey(animateKey);
+    }
+
+    // license-key forge: a clean key is always shown; the scramble->lock decode
+    // only plays when asked (plan change / section reveal). If rAF is throttled
+    // mid-animation, the displayed key stays a valid clean key, never junk.
+    var HEX = "0123456789ABCDEF", decodeRAF = null;
+    function group(n) { var s = ""; for (var i = 0; i < n; i++) s += HEX[Math.floor(Math.random() * 16)]; return s; }
+    function finalKey() { return "SNG-DMA-" + group(4) + "-" + group(4) + "-" + group(4); }
+    function render(str, locked) {
+      return locked ? str.replace(/([0-9A-F]{4})$/i, '<span class="grp-lock">$1</span>') : str;
+    }
+    function setKey(animate) {
+      if (!keyEl) return;
+      var target = finalKey(), len = target.length;
+      if (decodeRAF) { cancelAnimationFrame(decodeRAF); decodeRAF = null; }
+      if (!animate || reduced) { keyEl.innerHTML = render(target, true); return; }
+      var start = performance.now(), dur = 620;
+      (function step(t) {
+        var p = Math.min(1, (t - start) / dur), reveal = Math.floor(p * len), out = "";
+        for (var i = 0; i < len; i++) {
+          var ch = target[i];
+          out += (ch === "-" || i < reveal) ? ch : HEX[Math.floor(Math.random() * 16)];
+        }
+        keyEl.innerHTML = render(out, false);
+        if (p < 1) decodeRAF = requestAnimationFrame(step);
+        else { keyEl.innerHTML = render(target, true); decodeRAF = null; }
+      })(performance.now());
+    }
+
+    // GET KEY -> manifest (reuses cart + crimson breach FX)
+    var getBtn = $("#dma-get");
+    if (getBtn) getBtn.addEventListener("click", function () {
+      var p = current;
+      var ok = Cart.add({
+        key: "dma-" + p.id, kind: "dma",
+        title: "DMA KEY · " + p.label, subtitle: "R6S · instant key delivery",
+        price: p.price, unique: true, meta: { tier: "champion" },
+      });
+      var r = getBtn.getBoundingClientRect();
+      if (ok) {
+        runBreach(window.innerWidth / 2, r.top + r.height / 2, "champion", true);
+        setTimeout(openCart, reduced ? 200 : 760);
+      } else { flashCart(); }
+    });
+
+    select(current, false);                     // clean key on load (no animation)
+    observeOnce($("#dma"), function () { setKey(true); }); // forge it when scrolled in
   }
 
   /* ---------------- featured high-roller ---------------- */
@@ -763,7 +870,7 @@
   function runBreach(cx, cy, tierKey, fullscreen) {
     flashCart();
     if (reduced) return;
-    var color = Emblem.RAMP[tierKey] || "#00e5ff";
+    var color = Emblem.RAMP[tierKey] || "#34e3ff";
     var ov = document.createElement("div"); ov.id = "breach-overlay";
     ov.style.left = "0"; ov.style.top = "0"; ov.style.width = "100vw"; ov.style.height = "100vh";
     var cv = document.createElement("canvas");
@@ -829,8 +936,13 @@
     if (reduced || !("IntersectionObserver" in window)) return;
     var glyphs = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789#%&/<>*".split("");
     function scramble(el) {
-      var fin = el.getAttribute("data-final") || el.textContent;
-      el.setAttribute("data-final", fin);
+      // Preserve any inner markup (e.g. the DMA title's crimson <span>) — animate
+      // on textContent, then restore the original innerHTML on completion.
+      var html = el.getAttribute("data-final-html");
+      if (html == null) { html = el.innerHTML; el.setAttribute("data-final-html", html); }
+      var fin = el.getAttribute("data-final");
+      if (fin == null) { fin = el.textContent; el.setAttribute("data-final", fin); }
+      var hasMarkup = el.children.length > 0;
       var len = fin.length, start = performance.now(), dur = 720;
       (function step(t) {
         var p = Math.min(1, (t - start) / dur), reveal = Math.floor(p * len), out = "";
@@ -839,7 +951,9 @@
           out += (ch === " " || i < reveal) ? ch : glyphs[Math.floor(Math.random() * glyphs.length)];
         }
         el.textContent = out;
-        if (p < 1) requestAnimationFrame(step); else el.textContent = fin;
+        if (p < 1) requestAnimationFrame(step);
+        else if (hasMarkup) el.innerHTML = html;   // restore the crimson span etc.
+        else el.textContent = fin;
       })(performance.now());
     }
     var io = new IntersectionObserver(function (es) {
@@ -1047,7 +1161,8 @@
           var a = a0 + s * Math.PI;
           var x = cxc + Math.cos(a) * radius, z = Math.sin(a), depth = (z + 1) / 2;
           if (prev[s]) {
-            ctx.strokeStyle = (s ? "rgba(176,38,255," : "rgba(0,229,255,") + (0.12 + depth * 0.6) + ")";
+            // strand 0 = ice, strand 1 = crimson (disciplined two-tone helix)
+            ctx.strokeStyle = (s ? "rgba(255,39,64," : "rgba(52,227,255,") + (0.12 + depth * 0.6) + ")";
             ctx.lineWidth = 1 + depth * 2.6; ctx.lineCap = "round";
             ctx.beginPath(); ctx.moveTo(prev[s][0], prev[s][1]); ctx.lineTo(x, y); ctx.stroke();
           }
@@ -1055,10 +1170,10 @@
         }
         if (i % 3 === 0) {
           var ax = cxc + Math.cos(a0) * radius, bx = cxc + Math.cos(a0 + Math.PI) * radius;
-          ctx.strokeStyle = "rgba(150,110,210,0.16)"; ctx.lineWidth = 1;
+          ctx.strokeStyle = "rgba(138,151,180,0.13)"; ctx.lineWidth = 1;
           ctx.beginPath(); ctx.moveTo(ax, y); ctx.lineTo(bx, y); ctx.stroke();
-          node(ax, y, (Math.sin(a0) + 1) / 2, "0,229,255");
-          node(bx, y, (Math.sin(a0 + Math.PI) + 1) / 2, "176,38,255");
+          node(ax, y, (Math.sin(a0) + 1) / 2, "52,227,255");
+          node(bx, y, (Math.sin(a0 + Math.PI) + 1) / 2, "255,39,64");
         }
       }
     }
@@ -1115,7 +1230,7 @@
       var m = muzzlePt();
       var ang = -Math.PI * 0.32 + (Math.random() - 0.5) * 0.5; // tight up-right cone
       var sp = 17 + Math.random() * 12;
-      var col = Math.random() < 0.5 ? "#eaffff" : (Math.random() < 0.5 ? "#00e5ff" : "#b026ff");
+      var col = Math.random() < 0.5 ? "#eaffff" : (Math.random() < 0.5 ? "#34e3ff" : "#ff2740");
       tracers.push({ x: m.x, y: m.y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, life: 1, col: col, trail: [] });
       flashes.push({ x: m.x, y: m.y, life: 1 });
       shells.push({ x: m.x - 12, y: m.y + 4, vx: -(1 + Math.random() * 2), vy: -(2 + Math.random() * 2), rot: 0, life: 1 });
@@ -1136,7 +1251,7 @@
       // rifle
       ctx.strokeStyle = "#0a0818"; ctx.lineWidth = 6; ctx.lineCap = "round";
       ctx.beginPath(); ctx.moveTo(o.x + 4, o.y - 8); ctx.lineTo(m.x, m.y); ctx.stroke();
-      ctx.strokeStyle = "rgba(176,38,255,0.7)"; ctx.lineWidth = 2;
+      ctx.strokeStyle = "rgba(255,39,64,0.7)"; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.moveTo(o.x + 4, o.y - 8); ctx.lineTo(m.x, m.y); ctx.stroke();
     }
     function frame() {

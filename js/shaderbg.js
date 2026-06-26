@@ -29,15 +29,17 @@
     "  float f=fbm(p*1.3+r*2.2);",
     // glowing filaments (sharpened high-field veins)
     "  float fil=smoothstep(0.58,0.92,f) + 0.55*smoothstep(0.72,0.97,fbm(p*2.6+r*1.4+t));",
-    "  vec3 cyan=vec3(0.0,0.9,1.0); vec3 violet=vec3(0.69,0.15,1.0); vec3 mag=vec3(1.0,0.18,0.43);",
-    "  vec3 col=mix(violet, cyan, clamp(f*1.5,0.0,1.0));",
-    "  col=mix(col, mag, clamp(length(r)*0.6-0.15,0.0,1.0)*0.5);",
+    // DISCIPLINED PALETTE: deep-ice -> ice, with CRIMSON only as rare sparks (no rainbow)
+    "  vec3 ice=vec3(0.20,0.89,1.0); vec3 deepIce=vec3(0.05,0.31,0.42); vec3 crimson=vec3(1.0,0.15,0.25);",
+    "  vec3 col=mix(deepIce*0.55, ice, clamp(f*1.5,0.0,1.0));",
     "  col *= 0.10 + 0.7*f*f;",
-    "  col += fil * mix(cyan, violet, 0.5) * 0.55;",          // luminous veins
-    "  col *= 0.9 + 0.13*sin(u_time*0.6);",                   // slow energy pulse
+    "  col += fil * ice * 0.5;",                              // luminous cyan veins
+    "  float spark=smoothstep(0.86,0.99, fbm(p*3.1+r*1.2-t*0.7));",
+    "  col += spark * crimson * 0.55;",                       // rare crimson sparks only
+    "  col *= 0.9 + 0.12*sin(u_time*0.6);",                   // slow energy pulse
     "  float vig=smoothstep(1.32,0.12,length(p)); col*=vig;",
-    "  col=mix(vec3(0.027,0.02,0.063), col, 0.9);",
-    "  float md=length(p-u_mouse); col += cyan*0.13*exp(-md*2.8);", // mouse glow
+    "  col=mix(vec3(0.02,0.027,0.051), col, 0.9);",           // void base
+    "  float md=length(p-u_mouse); col += ice*0.12*exp(-md*2.8);", // mouse glow
     "  col *= 0.5;",                                          // keep readable behind text
     "  gl_FragColor=vec4(col, 1.0);",
     "}"

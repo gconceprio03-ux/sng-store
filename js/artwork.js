@@ -38,8 +38,8 @@
     for (var i = 0; i < ys.length; i++)
       grid += '<line x1="0" y1="' + ys[i] + '" x2="320" y2="' + ys[i] + '" stroke="' + rgba("#00e5ff", 0.07) + '" stroke-width="0.6"/>';
 
-    // drifting smoke (tier / violet / cyan)
-    var smoke = "", pal = [color, "#b026ff", "#00e5ff"];
+    // drifting smoke (tier color + ice family — no rainbow)
+    var smoke = "", pal = [color, "#34e3ff", "#0e5a6e"];
     for (var s = 0; s < 3; s++) {
       var sx = (30 + rnd() * 260).toFixed(0), sy = (18 + rnd() * 92).toFixed(0), sr = 40 + rnd() * 48;
       smoke += '<ellipse cx="' + sx + '" cy="' + sy + '" rx="' + sr.toFixed(0) + '" ry="' + (sr * 0.66).toFixed(0) +
